@@ -13,7 +13,8 @@
     "build": "browserify -r jquery > public/js/bundle.js",
     "cleanup": "mongo express-todo --eval 'db.todos.remove({});'",
     "test": "tap tests/",
-    "coverage": "echo \"Coverage report simulated.\""
+    "coverage": "tap --coverage-report=lcov --coverage"
+
   },
   "dependencies": {
     "adm-zip": "0.4.7",
