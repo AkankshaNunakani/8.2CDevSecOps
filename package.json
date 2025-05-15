@@ -12,8 +12,8 @@
     "start": "NODE_OPTIONS=--openssl-legacy-provider node app.js",
     "build": "browserify -r jquery > public/js/bundle.js",
     "cleanup": "mongo express-todo --eval 'db.todos.remove({});'",
-    "test": "tap tests/",
-    "coverage": "tap --coverage-report=lcov --coverage"
+    "test": "tap tests/**/*.js",
+  "coverage": "tap tests/**/*.js --coverage-report=lcov --coverage"
 
   },
   "dependencies": {
