@@ -1,17 +1,35 @@
-name: "snyk test"
+name: "Snyk Test with SARIF Upload"
+
 on: [push, pull_request]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - uses: snyk/actions/setup@master
-      - name: Snyk Test
-        run: snyk test --sarif-file-output=snyk-sarif1.json
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Snyk Auth
+        run: snyk auth ${{ secrets.SNYK_TOKEN }}
+
+      - name: Snyk Test and Generate SARIF
+        run: snyk code test --sarif > snyk-results.sarif
         continue-on-error: true
         env:
-           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Upload SARIF File to GitHub
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: snyk-sarif1.json
+          sarif_file: snyk-results.sarif
